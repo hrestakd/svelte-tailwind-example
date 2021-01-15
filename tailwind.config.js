@@ -1,4 +1,5 @@
 module.exports = {
+  darkMode: 'media',
   purge: {
     enabled: !process.env.ROLLUP_WATCH,
     mode: 'all',
@@ -10,7 +11,6 @@ module.exports = {
         [...content.matchAll(/(?:class:)*([\w\d-/:%.]+)/gm)].map(([_match, group, ..._rest]) => group),
     },
   },
-  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
   },
