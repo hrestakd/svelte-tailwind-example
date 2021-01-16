@@ -1,14 +1,15 @@
 <script lang="ts">
-import { afterUpdate, beforeUpdate, onMount } from "svelte";
-import Playground from "./playground.svelte";
-import UserControls from "./userControls.svelte";
-import UserSettings from "./userSettings.svelte";
+    import { afterUpdate, beforeUpdate, onMount, createEventDispatcher } from "svelte";
+    import Playground from "./playground.svelte";
+    import { gameInitialized } from '../stores';
 
-
+    
     export let name: string = '';
     let pText = 'Welcome to';
     let visible: boolean = false;
     let gameStarted: boolean = false;
+
+    const dispatch = createEventDispatcher();
 
     function typewriter(node: any, { speed = 25 }: any) {
         const valid = (
@@ -34,23 +35,39 @@ import UserSettings from "./userSettings.svelte";
 
     onMount(() => {
         pText += ' ' + name + ' playground!';
-        setTimeout(() => visible = true, 500);
-    })
+        if (!gameInitialized) {
+            setTimeout(() => {
+                visible = true;
+                gameInitialized.update(() => true);
+            }, 2000);
+            
+        } else {
+            visible = true;
+        }
+    });
+
+    function onStartGame() {
+        gameStarted = true;
+    }
+
+    function onShowSettings() {
+        dispatch('showSettings', true);
+    }
 
 </script>
 
 {#if visible}
-    <div>
-        <div class="flex flex-col">
+    <div class="flex flex-row">
+        <div class="flex flex-col items-center space-y-4">
             <div class="self-center p-4">
                 <img src="resources/pacman.svg" class="h-4 sm:h-8" alt="pacman"/>
             </div>
             <h1 class="font-mono text-3xl">
                 <p in:typewriter>{pText}</p>
             </h1>
+            <button class="rounded-lg w-44 bg-yellow-400" on:click={onStartGame}>New Game</button>
+            <button class="rounded-lg w-44 bg-yellow-400" on:click={onShowSettings}>User Settings</button>
         </div>
-        <UserControls></UserControls>
-        <UserSettings></UserSettings>
         {#if gameStarted}
             <Playground></Playground>
         {/if}
