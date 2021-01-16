@@ -1,13 +1,12 @@
 <script lang="ts">
     import { afterUpdate, beforeUpdate, onMount, createEventDispatcher } from "svelte";
     import Playground from "./playground.svelte";
-    import { gameInitialized } from '../stores';
+    import { gameInitialized, gameRunning } from '../stores';
 
     
     export let name: string = '';
     let pText = 'Welcome to';
     let visible: boolean = false;
-    let gameStarted: boolean = false;
 
     const dispatch = createEventDispatcher();
 
@@ -35,7 +34,7 @@
 
     onMount(() => {
         pText += ' ' + name + ' playground!';
-        if (!gameInitialized) {
+        if (!$gameInitialized) {
             setTimeout(() => {
                 visible = true;
                 gameInitialized.update(() => true);
@@ -47,29 +46,34 @@
     });
 
     function onStartGame() {
-        gameStarted = true;
+        gameRunning.update(() => true);
     }
 
     function onShowSettings() {
         dispatch('showSettings', true);
     }
 
+    function onExitGame() {
+        gameRunning.update(() => false);
+    }
+
 </script>
 
 {#if visible}
     <div class="flex flex-row">
-        <div class="flex flex-col items-center space-y-4">
-            <div class="self-center p-4">
-                <img src="resources/pacman.svg" class="h-4 sm:h-8" alt="pacman"/>
+        {#if $gameRunning}
+            <Playground on:exitGame={onExitGame}></Playground>
+        {:else}
+            <div class="flex flex-col items-center space-y-4">
+                <div class="self-center p-4">
+                    <img src="resources/pacman.svg" class="h-4 sm:h-8" alt="pacman"/>
+                </div>
+                <h1 class="font-mono text-3xl">
+                    <p in:typewriter>{pText}</p>
+                </h1>
+                <button class="rounded-lg w-44 bg-yellow-400 border-2 border-gray-600" on:click={onStartGame}>New Game</button>
+                <button class="rounded-lg w-44 bg-yellow-400 border-2 border-gray-600" on:click={onShowSettings}>User Settings</button>
             </div>
-            <h1 class="font-mono text-3xl">
-                <p in:typewriter>{pText}</p>
-            </h1>
-            <button class="rounded-lg w-44 bg-yellow-400" on:click={onStartGame}>New Game</button>
-            <button class="rounded-lg w-44 bg-yellow-400" on:click={onShowSettings}>User Settings</button>
-        </div>
-        {#if gameStarted}
-            <Playground></Playground>
         {/if}
     </div>
 {/if}
