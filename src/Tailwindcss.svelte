@@ -1,4 +1,4 @@
-<style global lang="postcss">
+<style global type="text/postcss">
   @tailwind base;
   @tailwind components;
   @tailwind utilities;

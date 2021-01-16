@@ -1,7 +1,6 @@
 <script lang="typescript">
 	import StartScreen from './components/startScreen.svelte';
-import Tailwindcss from './Tailwindcss.svelte';
-
+	import Tailwindcss from './Tailwindcss.svelte';
 	export let name: string;
 </script>
 

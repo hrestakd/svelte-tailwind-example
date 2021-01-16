@@ -10,7 +10,7 @@ import UserSettings from "./userSettings.svelte";
     let visible: boolean = false;
     let gameStarted: boolean = false;
 
-    function typewriter(node: any, { speed = 50 }: any) {
+    function typewriter(node: any, { speed = 25 }: any) {
         const valid = (
             node.childNodes.length === 1 &&
             node.childNodes[0].nodeType === Node.TEXT_NODE
