@@ -34,14 +34,21 @@ import UserSettings from "./userSettings.svelte";
 
     onMount(() => {
         pText += ' ' + name + ' playground!';
-        visible = true;
+        setTimeout(() => visible = true, 500);
     })
 
 </script>
 
 {#if visible}
-    <div class="md:flex container mx-auto px-4 border-gray-500 md:max-w-2xl">
-        <h2 class="font-mono" in:typewriter>{pText}</h2>
+    <div>
+        <div class="flex flex-col">
+            <div class="self-center p-4">
+                <img src="resources/pacman.svg" class="h-4 sm:h-8" alt="pacman"/>
+            </div>
+            <h1 class="font-mono text-3xl">
+                <p in:typewriter>{pText}</p>
+            </h1>
+        </div>
         <UserControls></UserControls>
         <UserSettings></UserSettings>
         {#if gameStarted}
